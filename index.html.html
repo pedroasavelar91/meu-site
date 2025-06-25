@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículo Interativo - Pedro Antonio da Silva Avelar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: A single-page, dashboard-style portfolio. The structure is thematic rather than purely chronological, designed to engage recruiters. It starts with a high-level overview (key stats, timeline), then allows deep dives into specific areas like Experience (via an interactive timeline) and Skills (with visual charts). This non-linear approach lets users quickly grasp key strengths and explore details at their own pace, which is more effective than a static document for retaining user interest. -->
+    <!-- Visualization & Content Choices: 
+        - Career Progression -> Goal: Show change/growth -> Viz: Interactive Vertical Timeline (HTML/CSS/JS) -> Interaction: Click to expand details -> Justification: More engaging and less overwhelming than a long text list.
+        - Team Leadership Size -> Goal: Compare quantitative data -> Viz: Bar Chart (Chart.js) -> Interaction: Tooltips on hover -> Justification: Immediately visualizes the scale of leadership responsibility, a key strength.
+        - Soft Skills -> Goal: Organize/Inform -> Viz: Radar Chart (Chart.js) -> Interaction: Tooltips on hover -> Justification: Provides a modern, impactful, and data-driven feel to subjective skills.
+        - Hard Skills & Certs -> Goal: Organize -> Viz: Card-based grid (HTML/Tailwind) -> Interaction: Subtle hover effects -> Justification: Clean, scannable, and modern presentation.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0d6efd;
+            border-bottom-color: #0d6efd;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+            max-width: 500px;
+            /* Added padding for chart labels visibility */
+            padding: 10px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                padding: 20px; /* Increased padding for larger screens */
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="home" class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold text-gray-800">
+                Pedro A. S. Avelar
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#overview" class="nav-link font-medium text-gray-600 pb-1">Visão Geral</a>
+                <a href="#experience" class="nav-link font-medium text-gray-600 pb-1">Experiência</a>
+                <a href="#skills" class="nav-link font-medium text-gray-600 pb-1">Competências</a>
+                <a href="#education" class="nav-link font-medium text-gray-600 pb-1">Formação</a>
+            </div>
+            <div class="md:hidden">
+                <select id="mobile-nav" class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="#home">Menu</option>
+                    <option value="#overview">Visão Geral</option>
+                    <option value="#experience">Experiência</option>
+                    <option value="#skills">Competências</option>
+                    <option value="#education">Formação</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+        
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Pedro Antonio da Silva Avelar</h1>
+            <p class="text-xl md:text-2xl text-blue-600 font-medium mb-4">Especialista em Liderança Operacional, Gestão Estratégica e Otimização de Processos</p>
+            <p class="max-w-3xl mx-auto text-gray-600 mb-6">
+                Busco uma posição que me permita contribuir ativamente para a eficiência operacional, segurança e alcance de resultados estratégicos em um ambiente dinâmico e desafiador.
+            </p>
+            <div class="flex justify-center items-center space-x-4 text-gray-500">
+                <span>📍 Anápolis – GO</span>
+                <span>•</span>
+                <span>📞 (31) 9 8911-0970</span>
+                <span>•</span>
+                <a href="mailto:pedro.avelar.pessoal@gmail.com" class="hover:text-blue-600">✉️ pedro.avelar.pessoal@gmail.com</a>
+            </div>
+        </section>
+
+        <section id="overview" class="py-12">
+            <h2 class="text-3xl font-bold text-center mb-4">Visão Geral da Carreira</h2>
+            <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                Esta seção oferece um resumo visual da minha jornada, destacando os principais marcos e a evolução da minha capacidade de liderança. Explore os gráficos para entender a escala da minha experiência e a linha do tempo para ver minha progressão de carreira.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-center mb-4">Evolução da Liderança de Equipes</h3>
+                    <div class="chart-container">
+                        <canvas id="teamSizeChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-center mb-4">Resumo Executivo</h3>
+                    <div class="space-y-4 text-gray-700">
+                        <div class="flex items-start">
+                            <span class="text-blue-500 mr-3 mt-1">✓</span>
+                            <p>Mais de <strong>15 anos de experiência</strong> em gestão operacional e resposta a emergências em ambientes de alta complexidade.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-blue-500 mr-3 mt-1">✓</span>
+                            <p>Liderança de equipes de até <strong>68 profissionais</strong>, com foco em padronização de processos e superação de metas.</p>
+                        </div>
+                        <div class="flex items-start">
+                           <span class="text-blue-500 mr-3 mt-1">✓</span>
+                            <p>Proficiência em ferramentas de <strong>Business Intelligence (Power BI)</strong> e automação para otimizar a tomada de decisões.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="experience" class="py-12">
+            <h2 class="text-3xl font-bold text-center mb-4">Experiência Profissional</h2>
+             <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                Abaixo está uma linha do tempo interativa da minha carreira. Clique em cada cargo para expandir e ver os detalhes das minhas responsabilidades e conquistas em cada função, demonstrando meu crescimento contínuo e adaptabilidade.
+            </p>
+            <div id="timeline" class="relative max-w-3xl mx-auto"></div>
+        </section>
+
+        <section id="skills" class="py-12 bg-gray-50 rounded-lg">
+            <h2 class="text-3xl font-bold text-center mb-4">Painel de Competências</h2>
+             <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                Minhas competências são divididas em habilidades comportamentais (Soft Skills) e técnicas (Hard Skills). O gráfico de radar ilustra meus pontos fortes em liderança e gestão, enquanto os cartões detalham minhas capacidades técnicas.
+            </p>
+            <div class="grid md:grid-cols-5 gap-8">
+                <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-center mb-4">Soft Skills</h3>
+                    <div class="chart-container">
+                         <canvas id="softSkillsChart"></canvas>
+                    </div>
+                </div>
+                <div class="md:col-span-3">
+                    <h3 class="text-xl font-bold mb-6 text-center">Hard Skills</h3>
+                    <div id="hard-skills-container" class="grid sm:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="py-12">
+            <h2 class="text-3xl font-bold text-center mb-4">Formação e Certificações</h2>
+             <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                Minha base educacional e especializações contínuas são fundamentais para minha atuação. Aqui você encontra minha formação acadêmica e as certificações que comprovam minha expertise em gestão, tecnologia e operações.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">🎓 Formação Acadêmica</h3>
+                    <p class="font-semibold text-lg text-gray-800">Graduação em Gestão Pública</p>
+                    <p class="text-gray-600">Faculdade Goiás</p>
+                </div>
+                <div id="certifications" class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">📜 Certificações e Cursos</h3>
+                    <div id="certifications-container" class="space-y-4"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-gray-800 text-white text-center py-6">
+        <p class="font-semibold">Pedro Antonio da Silva Avelar</p>
+        <div class="flex justify-center items-center space-x-4 mt-2">
+            <a href="mailto:pedro.avelar.pessoal@gmail.com" class="hover:text-blue-300">pedro.avelar.pessoal@gmail.com</a>
+            <span>|</span>
+            <a href="https://linkedin.com/in/pedro-avelar-b56a35177" target="_blank" class="hover:text-blue-300">LinkedIn</a>
+        </div>
+    </footer>
+
+    <script>
+        const experienceData = [
+            {
+                role: 'Gerente de Seção Contra Incêndio',
+                company: 'Group Med+ | Aeroporto Internacional de Brasília',
+                date: '2022 – 2025',
+                details: [
+                    'Gestão estratégica e desenvolvimento de equipe de 68 bombeiros, assegurando prontidão operacional, disciplina e conformidade regulatória.',
+                    'Liderança no planejamento e execução de programas de treinamento técnico em estrita conformidade com a regulamentação da ANAC.',
+                    'Supervisão rigorosa e otimização de rotinas operacionais, processos administrativos e auditorias, consistentemente atingindo classificação "ALFA".',
+                    'Condução de melhorias operacionais significativas, incluindo reestruturação de escalas e otimização logística.'
+                ]
+            },
+            {
+                role: 'Gerente de Seção Contra Incêndio',
+                company: 'Group Med+ | Aeroporto Internacional Santa Genoveva',
+                date: '2020 – 2022',
+                details: [
+                    'Liderança e desenvolvimento de equipe de 53 profissionais, promovendo um alto nível de segurança e eficiência operacional.',
+                    'Gerenciamento e controle de indicadores de desempenho e KPIs, garantindo a realização de simulações operacionais.',
+                    'Implementação de melhorias contínuas nos processos e na gestão integrada das rotinas administrativas da seção.'
+                ]
+            },
+            {
+                role: 'Chefe de Equipe',
+                company: 'Group Med+ | Aeroporto Internacional Santa Genoveva',
+                date: '2022',
+                details: [
+                    'Coordenação de equipe de 12 profissionais, com foco na gestão de treinamentos específicos e desenvolvimento de competências.',
+                    'Monitoramento da execução de protocolos de segurança e atuação direta em resposta emergencial.'
+                ]
+            },
+            {
+                role: 'Bombeiro de Aeródromo',
+                company: 'Group Med+ / Falck Fire Safety | Aeroporto Internacional Tancredo Neves',
+                date: '2017 – 2022',
+                details: [
+                    'Execução de rotinas críticas de emergência e salvamento, com foco em segurança operacional e pronta resposta a incidentes.',
+                    'Participação ativa em processos administrativos e no controle de equipamentos e documentação.'
+                ]
+            },
+            {
+                role: 'Soldado 1ª Classe',
+                company: 'Força Aérea Brasileira | Pelotão Contra Incêndio',
+                date: '2010 – 2016',
+                details: [
+                    'Gestão da seção de extintores e apoio administrativo à organização interna do pelotão.',
+                    'Suporte logístico, controle de materiais e manutenção preventiva de equipamentos.'
+                ]
+            }
+        ];
+
+        const hardSkillsData = [
+            { name: 'Gestão de Equipes Operacionais de Grande Porte', icon: '👥' },
+            { name: 'Coordenação e Desenvolvimento de Treinamentos', icon: '🏋️' },
+            { name: 'Conformidade Regulatória e Auditorias', icon: '📋' },
+            { name: 'Otimização de Rotinas e Processos', icon: '⚙️' },
+            { name: 'Gestão de Recursos e Logística', icon: '📦' },
+            { name: 'Planejamento e Execução de Planos de Emergência', icon: '🚨' },
+            { name: 'Gestão de Documentação Técnica', icon: '📄' },
+            { name: 'Business Intelligence e Automação (Power Apps, Power BI)', icon: '📊' }
+        ];
+
+        const certificationsData = [
+            { category: 'Gestão Operacional e Liderança', items: ['Curso de Gestor de SESCINC (Infraero)', 'Curso de Especialização para Chefia (ENSEG)'] },
+            { category: 'Tecnologia, Processos e Dados', items: ['Power Platform (Apps, BI, Automate)', 'Excel Avançado e SharePoint', 'Fundamentos de Data Science'] },
+            { category: 'Segurança e Operações', items: ['Curso Bombeiro de Aeródromo (CECIS – FAB)'] }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const timelineContainer = document.getElementById('timeline');
+            experienceData.forEach((job, index) => {
+                const isLast = index === experienceData.length - 1;
+                const timelineItem = document.createElement('div');
+                timelineItem.className = `pl-8 relative cursor-pointer group ${!isLast ? 'pb-8' : ''}`;
+                timelineItem.innerHTML = `
+                    <div class="absolute left-0 top-0 h-full border-l-2 border-gray-300"></div>
+                    <div class="absolute left-[-9px] top-1 w-5 h-5 bg-white border-2 border-blue-500 rounded-full transition-transform group-hover:scale-125"></div>
+                    <p class="text-sm font-medium text-blue-600">${job.date}</p>
+                    <h4 class="font-bold text-lg text-gray-800">${job.role}</h4>
+                    <p class="text-gray-600 mb-2">${job.company}</p>
+                    <div class="details hidden text-gray-700 space-y-2 text-sm pl-4 border-l-2 border-gray-200 ml-[-9px] pt-2 pb-2">
+                        ${job.details.map(d => `<p>${d}</p>`).join('')}
+                    </div>
+                `;
+                timelineContainer.appendChild(timelineItem);
+                
+                timelineItem.addEventListener('click', () => {
+                    timelineItem.querySelector('.details').classList.toggle('hidden');
+                });
+            });
+
+            const hardSkillsContainer = document.getElementById('hard-skills-container');
+            hardSkillsData.forEach(skill => {
+                const skillCard = document.createElement('div');
+                skillCard.className = 'bg-white p-4 rounded-lg shadow-md flex items-center transition-transform hover:scale-105';
+                skillCard.innerHTML = `
+                    <span class="text-2xl mr-4">${skill.icon}</span>
+                    <span class="font-medium text-gray-700">${skill.name}</span>
+                `;
+                hardSkillsContainer.appendChild(skillCard);
+            });
+
+            const certificationsContainer = document.getElementById('certifications-container');
+            certificationsData.forEach(cat => {
+                const certGroup = document.createElement('div');
+                certGroup.innerHTML = `
+                    <p class="font-semibold text-gray-800">${cat.category}</p>
+                    <ul class="list-disc list-inside text-gray-600 text-sm">
+                        ${cat.items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                `;
+                certificationsContainer.appendChild(certGroup);
+            });
+            
+            const teamSizeCtx = document.getElementById('teamSizeChart').getContext('2d');
+            new Chart(teamSizeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Gerente BSB', 'Gerente GYN', 'Chefe Equipe GYN'],
+                    datasets: [{
+                        label: 'Nº de Liderados Diretos',
+                        data: [68, 53, 12],
+                        backgroundColor: ['#0d6efd', '#6c757d', '#198754'],
+                        borderColor: ['#0d6efd', '#6c757d', '#198754'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Liderados: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            const softSkillsCtx = document.getElementById('softSkillsChart').getContext('2d');
+            new Chart(softSkillsCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Liderança', 'Tomada de Decisão', 'Comunicação', 'Adaptabilidade', 'Gestão de Conflitos', 'Proatividade'],
+                    datasets: [{
+                        label: 'Nível de Proficiência',
+                        data: [95, 90, 95, 95, 88, 92], /* Comunicação alterada para 95 */
+                        backgroundColor: 'rgba(13, 110, 253, 0.2)',
+                        borderColor: 'rgba(13, 110, 253, 1)',
+                        pointBackgroundColor: 'rgba(13, 110, 253, 1)',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.1)' },
+                            grid: { color: 'rgba(0,0,0,0.1)' },
+                            pointLabels: { 
+                                font: { size: 12 },
+                                // Added padding to push labels further from the center, preventing cutting
+                                padding: 10 
+                            },
+                            ticks: { 
+                                display: false, 
+                                beginAtZero: true, 
+                                max: 100 // Adjusted max value to provide more space for labels
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 10,
+                            top: 10,
+                            bottom: 10
+                        }
+                    }
+                }
+            });
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 68) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.addEventListener('change', (e) => {
+                window.location.href = e.target.value;
+            });
+        });
+    </script>
+</body>
+</html>
